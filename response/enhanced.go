@@ -133,6 +133,7 @@ type Responses struct {
 	FailReadErrorDataCmd         *Response
 	FailPathTooLong              *Response
 	FailInvalidAddress           *Response
+	FailInvalidAuth              *Response
 	FailLocalPartTooLong         *Response
 	FailDomainTooLong            *Response
 	FailBackendNotRunning        *Response
@@ -150,6 +151,7 @@ type Responses struct {
 	SuccessRcptCmd       *Response
 	SuccessResetCmd      *Response
 	SuccessVerifyCmd     *Response
+	SuccessAuthCmd       *Response
 	SuccessNoopCmd       *Response
 	SuccessQuitCmd       *Response
 	SuccessDataCmd       *Response
@@ -176,6 +178,13 @@ func init() {
 		Comment:      "Error: nested MAIL command",
 	}
 
+	Canned.FailInvalidAuth = &Response{
+		EnhancedCode: AuthLoginInvalid,
+		BasicCode:    403,
+		Class:        ClassTransientFailure,
+		Comment:      "Error: Invalid Credentials",
+	}
+
 	Canned.SuccessMailCmd = &Response{
 		EnhancedCode: OtherAddressStatus,
 		Class:        ClassSuccess,
@@ -187,6 +196,13 @@ func init() {
 	}
 
 	Canned.SuccessResetCmd = Canned.SuccessMailCmd
+
+	Canned.SuccessAuthCmd = &Response{
+		EnhancedCode: AuthLoginValid,
+		BasicCode:    250,
+		Class:        ClassSuccess,
+		Comment:      "Login successful",
+	}
 
 	Canned.SuccessNoopCmd = &Response{
 		EnhancedCode: OtherStatus,
@@ -373,6 +389,7 @@ const (
 	MailboxHasMoved                         = ".1.6"
 	BadSendersMailboxAddressSyntax          = ".1.7"
 	BadSendersSystemAddress                 = ".1.8"
+	AuthLoginValid                          = ".1.9"
 	OtherOrUndefinedMailboxStatus           = ".2.0"
 	MailboxDisabled                         = ".2.1"
 	MailboxFull                             = ".2.2"
@@ -391,6 +408,7 @@ const (
 	NetworkCongestion                       = ".4.5"
 	RoutingLoopDetected                     = ".4.6"
 	DeliveryTimeExpired                     = ".4.7"
+	AuthLoginInvalid                        = ".4.8"
 	OtherOrUndefinedProtocolStatus          = ".5.0"
 	InvalidCommand                          = ".5.1"
 	SyntaxError                             = ".5.2"

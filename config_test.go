@@ -1,14 +1,15 @@
 package guerrilla
 
 import (
-	"github.com/flashmob/go-guerrilla/backends"
-	"github.com/flashmob/go-guerrilla/log"
-	"github.com/flashmob/go-guerrilla/tests/testcert"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/sendx/go-guerrilla/backends"
+	"github.com/sendx/go-guerrilla/log"
+	"github.com/sendx/go-guerrilla/tests/testcert"
 )
 
 // a configuration file with a dummy backend

@@ -2,12 +2,13 @@ package guerrilla
 
 import (
 	"errors"
-	"github.com/flashmob/go-guerrilla/log"
-	"github.com/flashmob/go-guerrilla/mail"
 	"net"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/sendx/go-guerrilla/log"
+	"github.com/sendx/go-guerrilla/mail"
 )
 
 var (

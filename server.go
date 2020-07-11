@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"net"
@@ -16,11 +15,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/flashmob/go-guerrilla/backends"
-	"github.com/flashmob/go-guerrilla/log"
-	"github.com/flashmob/go-guerrilla/mail"
-	"github.com/flashmob/go-guerrilla/mail/rfc5321"
-	"github.com/flashmob/go-guerrilla/response"
+	"github.com/sirupsen/logrus"
+
+	"github.com/sendx/go-guerrilla/backends"
+	"github.com/sendx/go-guerrilla/log"
+	"github.com/sendx/go-guerrilla/mail"
+	"github.com/sendx/go-guerrilla/mail/rfc5321"
+	"github.com/sendx/go-guerrilla/response"
 )
 
 const (
@@ -81,6 +82,7 @@ var (
 	cmdQUIT     command = []byte("QUIT")
 	cmdDATA     command = []byte("DATA")
 	cmdSTARTTLS command = []byte("STARTTLS")
+	cmdAUTH     command = []byte("AUTH")
 )
 
 func (c command) match(in []byte) bool {
@@ -487,6 +489,8 @@ func (s *server) handleClient(client *client) {
 					}
 				}
 				client.sendResponse(r.SuccessMailCmd)
+			case cmdAUTH.match(cmd):
+				client.sendResponse(r.SuccessAuthCmd)
 			case cmdMAIL.match(cmd):
 				if client.isInTransaction() {
 					client.sendResponse(r.FailNestedMailCmd)
