@@ -41,9 +41,10 @@ var codeMap = struct {
 }{m: map[EnhancedStatusCode]int{
 
 	EnhancedStatusCode{ClassSuccess, OtherAddressStatus}:               250,
-	EnhancedStatusCode{ClassSuccess, DestinationMailboxAddressValid}:   250,
+	EnhancedStatusCode{ClassSuccess, AuthLoginValid}:                   250,
 	EnhancedStatusCode{ClassSuccess, OtherOrUndefinedMailSystemStatus}: 250,
 	EnhancedStatusCode{ClassSuccess, OtherOrUndefinedProtocolStatus}:   250,
+	EnhancedStatusCode{ClassSuccess, ConversionWithLossPerformed}:      250,
 	EnhancedStatusCode{ClassSuccess, ConversionWithLossPerformed}:      250,
 	EnhancedStatusCode{ClassSuccess, ".6.8"}:                           252,
 	EnhancedStatusCode{ClassSuccess, ".7.0"}:                           220,
@@ -62,6 +63,7 @@ var codeMap = struct {
 	EnhancedStatusCode{ClassTransientFailure, InvalidCommand}:                    430,
 	EnhancedStatusCode{ClassTransientFailure, TooManyRecipients}:                 452,
 	EnhancedStatusCode{ClassTransientFailure, InvalidCommandArguments}:           451,
+	EnhancedStatusCode{ClassTransientFailure, AuthLoginInvalid}:                  451,
 	EnhancedStatusCode{ClassTransientFailure, ".7.0"}:                            450,
 	EnhancedStatusCode{ClassTransientFailure, ".7.1"}:                            451,
 	EnhancedStatusCode{ClassTransientFailure, ".7.12"}:                           422,

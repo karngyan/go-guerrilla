@@ -490,6 +490,9 @@ func (s *server) handleClient(client *client) {
 				}
 				client.sendResponse(r.SuccessMailCmd)
 			case cmdAUTH.match(cmd):
+				if s.log().IsDebug() {
+					s.log().Debugf("AUTH Command: %s", cmd)
+				}
 				client.sendResponse(r.SuccessAuthCmd)
 			case cmdMAIL.match(cmd):
 				if client.isInTransaction() {
