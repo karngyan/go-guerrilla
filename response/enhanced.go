@@ -203,7 +203,7 @@ func init() {
 		EnhancedCode: AuthLoginValid,
 		BasicCode:    250,
 		Class:        ClassSuccess,
-		Comment:      "Login successful",
+		Comment:      "Login successful for user",
 	}
 
 	Canned.SuccessNoopCmd = &Response{
