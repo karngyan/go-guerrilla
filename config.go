@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/sendx/go-guerrilla/auth"
 	"github.com/sendx/go-guerrilla/backends"
 	"github.com/sendx/go-guerrilla/log"
 )
@@ -60,6 +61,8 @@ type ServerConfig struct {
 	// XClientOn when using a proxy such as Nginx, XCLIENT command is used to pass the
 	// original client's IP address & client's HELO
 	XClientOn bool `json:"xclient_on,omitempty"`
+	// Authentication type: no auth, from file, from DB etc
+	AuthType auth.AuthType `json:"auth_type,omitempty"`
 }
 
 type ServerTLSConfig struct {
@@ -288,6 +291,7 @@ func (c *AppConfig) setDefaults() error {
 		sc.MaxClients = defaultMaxClients
 		sc.Timeout = defaultTimeout
 		sc.MaxSize = defaultMaxSize
+		sc.AuthType = auth.NoAuth
 		c.Servers = append(c.Servers, sc)
 	} else {
 		// make sure each server has defaults correctly configured
