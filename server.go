@@ -15,13 +15,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/sirupsen/logrus"
+	b64 "encoding/base64"
 
 	"github.com/sendx/go-guerrilla/backends"
 	"github.com/sendx/go-guerrilla/log"
 	"github.com/sendx/go-guerrilla/mail"
 	"github.com/sendx/go-guerrilla/mail/rfc5321"
 	"github.com/sendx/go-guerrilla/response"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -79,6 +80,7 @@ var (
 	cmdRSET     command = []byte("RSET")
 	cmdVRFY     command = []byte("VRFY")
 	cmdNOOP     command = []byte("NOOP")
+	cmdASTERISK command = []byte("*")
 	cmdQUIT     command = []byte("QUIT")
 	cmdDATA     command = []byte("DATA")
 	cmdSTARTTLS command = []byte("STARTTLS")
@@ -490,10 +492,20 @@ func (s *server) handleClient(client *client) {
 				}
 				client.sendResponse(r.SuccessMailCmd)
 			case cmdAUTH.match(cmd):
-				if s.log().IsDebug() {
-					s.log().Debugf("AUTH Command: %s", cmd)
+				s.log().Infof("%s", string(cmd))
+				split := strings.Split(string(cmd), " ")
+				if len(split) >= 3 && split[1] == "PLAIN" {
+					if up, err := b64.StdEncoding.DecodeString(split[2]); err != nil {
+						s.log().WithError(err).Error("Error decoding username/password")
+						client.sendResponse(r.FailInvalidAuth)
+						break
+					} else {
+						fmt.Println(up)
+					}
+					client.sendResponse(r.SuccessAuthCmd)
+				} else {
+					client.sendResponse(r.FailInvalidAuth)
 				}
-				client.sendResponse(r.SuccessAuthCmd)
 			case cmdMAIL.match(cmd):
 				if client.isInTransaction() {
 					client.sendResponse(r.FailNestedMailCmd)
@@ -543,6 +555,9 @@ func (s *server) handleClient(client *client) {
 				client.sendResponse(r.SuccessVerifyCmd)
 
 			case cmdNOOP.match(cmd):
+				client.sendResponse(r.SuccessNoopCmd)
+
+			case cmdASTERISK.match(cmd):
 				client.sendResponse(r.SuccessNoopCmd)
 
 			case cmdQUIT.match(cmd):
