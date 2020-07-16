@@ -492,9 +492,10 @@ func (s *server) handleClient(client *client) {
 				}
 				client.sendResponse(r.SuccessMailCmd)
 			case cmdAUTH.match(cmd):
-				s.log().Infof("%s", string(cmd))
-				split := strings.Split(string(cmd), " ")
+				command := string(input)
+				split := strings.Split(string(command), " ")
 				if len(split) >= 3 && split[1] == "PLAIN" {
+					s.log().Info("Auth command split from client:", split)
 					if up, err := b64.StdEncoding.DecodeString(split[2]); err != nil {
 						s.log().WithError(err).Error("Error decoding username/password")
 						client.sendResponse(r.FailInvalidAuth)
