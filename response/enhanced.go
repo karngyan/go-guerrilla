@@ -41,13 +41,13 @@ var codeMap = struct {
 }{m: map[EnhancedStatusCode]int{
 
 	EnhancedStatusCode{ClassSuccess, OtherAddressStatus}:               250,
-	EnhancedStatusCode{ClassSuccess, AuthLoginValid}:                   250,
 	EnhancedStatusCode{ClassSuccess, OtherOrUndefinedMailSystemStatus}: 250,
 	EnhancedStatusCode{ClassSuccess, OtherOrUndefinedProtocolStatus}:   250,
 	EnhancedStatusCode{ClassSuccess, ConversionWithLossPerformed}:      250,
 	EnhancedStatusCode{ClassSuccess, ConversionWithLossPerformed}:      250,
+	EnhancedStatusCode{ClassSuccess, AuthLoginValid}:                   235,
 	EnhancedStatusCode{ClassSuccess, ".6.8"}:                           252,
-	EnhancedStatusCode{ClassSuccess, ".7.0"}:                           220,
+	EnhancedStatusCode{ClassSuccess, ".7.0"}:                           220, // According to rfc4954
 
 	EnhancedStatusCode{ClassTransientFailure, BadDestinationMailboxAddress}:      451,
 	EnhancedStatusCode{ClassTransientFailure, BadSendersSystemAddress}:           451,
@@ -201,7 +201,7 @@ func init() {
 
 	Canned.SuccessAuthCmd = &Response{
 		EnhancedCode: AuthLoginValid,
-		BasicCode:    250,
+		BasicCode:    235,
 		Class:        ClassSuccess,
 		Comment:      "Login successful for user",
 	}
@@ -391,7 +391,6 @@ const (
 	MailboxHasMoved                         = ".1.6"
 	BadSendersMailboxAddressSyntax          = ".1.7"
 	BadSendersSystemAddress                 = ".1.8"
-	AuthLoginValid                          = ".1.9"
 	OtherOrUndefinedMailboxStatus           = ".2.0"
 	MailboxDisabled                         = ".2.1"
 	MailboxFull                             = ".2.2"
@@ -423,6 +422,7 @@ const (
 	ConversionRequiredButNotSupported       = ".6.3"
 	ConversionWithLossPerformed             = ".6.4"
 	ConversionFailed                        = ".6.5"
+	AuthLoginValid                          = ".7.0" // According to rfc4954
 )
 
 var defaultTexts = struct {
