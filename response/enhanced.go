@@ -194,6 +194,7 @@ func init() {
 
 	Canned.SuccessRcptCmd = &Response{
 		EnhancedCode: DestinationMailboxAddressValid,
+		BasicCode:    250,
 		Class:        ClassSuccess,
 	}
 
