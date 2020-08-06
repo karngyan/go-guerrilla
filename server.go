@@ -17,6 +17,7 @@ import (
 
 	b64 "encoding/base64"
 
+	"github.com/sendx/go-guerrilla/auth"
 	"github.com/sendx/go-guerrilla/backends"
 	"github.com/sendx/go-guerrilla/log"
 	"github.com/sendx/go-guerrilla/mail"
@@ -494,6 +495,11 @@ func (s *server) handleClient(client *client) {
 			case cmdAUTH.match(cmd):
 				command := string(input)
 				split := strings.Split(string(command), " ")
+				// This is the format of the Base64 encoding of the AUTH PLAIN command
+				// If the input is user: agni, password: pass, then the base64 generated would be: "AGFnbmkAcGFzcw=="
+				// When decoded, it will have the following byte array sequence: [0 97 103 110 105 0 112 97 115 115]
+				// As seen, the byte array starts with a "null" character, then the next 4 bytes convert to "agni"
+				// Then, another null character follows, added by the string which converts to "pass"
 				if len(split) >= 3 && split[1] == "PLAIN" {
 					s.log().Info("Auth command split from client:", split)
 					if up, err := b64.StdEncoding.DecodeString(split[2]); err != nil {
@@ -501,7 +507,33 @@ func (s *server) handleClient(client *client) {
 						client.sendResponse(r.FailInvalidAuth)
 						break
 					} else {
-						fmt.Println(up)
+						var user string
+						var pass string
+						nilFound := 0
+						// This code segments the byte array into username and password from the example shown above.
+						for _, b := range up {
+							if b == 0 {
+								nilFound++
+								continue
+							} else if nilFound == 1 {
+								user += string(b)
+							} else if nilFound == 2 {
+								pass += string(b)
+							}
+						}
+						if sc.AuthConfig.Type != auth.NoAuth {
+							if ok, err := sc.AuthConfig.Store.Authenticate(user, pass); err != nil {
+								s.log().WithError(err).Error("Error authenticating from file store")
+								client.sendResponse(r.FailInvalidAuth)
+							} else if ok {
+								userpass := auth.Auth{
+									Username: user,
+									Password: pass,
+								}
+								client.Envelope.Auth = userpass
+								client.sendResponse(r.SuccessAuthCmd)
+							}
+						}
 					}
 					client.sendResponse(r.SuccessAuthCmd)
 				} else {

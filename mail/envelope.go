@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/sendx/go-guerrilla/auth"
 	"github.com/sendx/go-guerrilla/mail/rfc5321"
 )
 
@@ -147,6 +148,8 @@ type Envelope struct {
 	QueuedId string
 	// ESMTP: true if EHLO was used
 	ESMTP bool
+	// Username and password used to login to SMTP Server
+	Auth auth.Auth
 	// When locked, it means that the envelope is being processed by the backend
 	sync.Mutex
 }

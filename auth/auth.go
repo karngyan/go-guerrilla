@@ -23,6 +23,12 @@ type Auth struct {
 	Password string
 }
 
+// Stores the AuthType and AuthStore to authenticate incoming login/auth request
+type AuthConfig struct {
+	Type  AuthType
+	Store AuthStore
+}
+
 // This interface is used for authenticating users
 // Different implementation of AuthStore will authenticate using different backends.
 // Like: files, DBs etc.
