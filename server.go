@@ -523,7 +523,7 @@ func (s *server) handleClient(client *client) {
 						}
 						if sc.AuthConfig.Type != auth.NoAuth {
 							if ok, err := sc.AuthConfig.Store.Authenticate(user, pass); err != nil {
-								s.log().WithError(err).Error("Error authenticating from file store")
+								s.log().WithError(err).Error("Error authenticating from store")
 								client.sendResponse(r.FailInvalidAuth)
 							} else if ok {
 								userpass := auth.Auth{

@@ -8,6 +8,8 @@ import (
 	"io"
 	"os"
 	"strings"
+
+	_ "github.com/lib/pq" // here
 )
 
 type AuthType int
@@ -40,7 +42,7 @@ type FileAuthStore struct {
 	FilePath string
 }
 
-func (fas *FileAuthStore) Authenticate(username, password string) (bool, error) {
+func (fas FileAuthStore) Authenticate(username, password string) (bool, error) {
 	if auths, err := fas.LoadFile(); err != nil {
 		return false, err
 	} else {
@@ -52,7 +54,7 @@ func (fas *FileAuthStore) Authenticate(username, password string) (bool, error) 
 	}
 	return false, errors.New("User/Password not found")
 }
-func (fas *FileAuthStore) LoadFile() ([]Auth, error) {
+func (fas FileAuthStore) LoadFile() ([]Auth, error) {
 	var auths []Auth
 
 	f, err := os.Open(fas.FilePath)
@@ -127,16 +129,16 @@ type PostgresAuthStore struct {
 	TableName    string
 }
 
-func (pas *PostgresAuthStore) Authenticate(username, password string) (bool, error) {
+func (pas PostgresAuthStore) Authenticate(username, password string) (bool, error) {
 	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		"apiserver", "apiserver", "apiserver")
+		pas.Username, pas.Password, pas.DatabaseName)
 	db, err := sql.Open("postgres", dbinfo)
 	if err != nil {
-		return false, errors.New("DB not opening")
+		return false, fmt.Errorf("DB not opening: %s", err.Error())
 	}
 	defer db.Close()
 
-	if rows, err := db.Query(fmt.Sprintf("SELECT username, password FROM smtp_auth WHERE username = '%s' AND password = '%s'", username, password)); err == nil {
+	if rows, err := db.Query(fmt.Sprintf("SELECT username, password FROM %s WHERE username = '%s' AND password = '%s'", pas.TableName, username, password)); err == nil {
 		for rows.Next() {
 			var u, p string
 			err = rows.Scan(&u, &p)
