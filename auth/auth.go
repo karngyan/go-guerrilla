@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	_ "github.com/lib/pq" // here
+	_ "github.com/lib/pq" // Including Postgres driver from here
 )
 
 type AuthType int
@@ -123,6 +123,7 @@ func (fas FileAuthStore) LoadFile() ([]Auth, error) {
 }
 
 type PostgresAuthStore struct {
+	Host         string
 	DatabaseName string
 	Username     string
 	Password     string
@@ -130,7 +131,7 @@ type PostgresAuthStore struct {
 }
 
 func (pas PostgresAuthStore) Authenticate(username, password string) (bool, error) {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
+	dbinfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", pas.Host,
 		pas.Username, pas.Password, pas.DatabaseName)
 	db, err := sql.Open("postgres", dbinfo)
 	if err != nil {
