@@ -385,6 +385,7 @@ func (s *server) handleClient(client *client) {
 	pipelining := "250-PIPELINING\r\n"
 	advertiseTLS := "250-STARTTLS\r\n"
 	advertiseEnhancedStatusCodes := "250-ENHANCEDSTATUSCODES\r\n"
+	authentications := "250 AUTH PLAIN"
 	// The last line doesn't need \r\n since string will be printed as a new line.
 	// Also, Last line has no dash -
 	help := "250 HELP"
@@ -468,6 +469,7 @@ func (s *server) handleClient(client *client) {
 					pipelining,
 					advertiseTLS,
 					advertiseEnhancedStatusCodes,
+					authentications,
 					help)
 
 			case cmdHELP.match(cmd):
