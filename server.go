@@ -524,8 +524,8 @@ func (s *server) handleClient(client *client) {
 						}
 						if sc.AuthConfig.Type != auth.NoAuth {
 							if ok, err := sc.AuthConfig.Store.Authenticate(user, pass); err != nil {
-								s.log().WithError(err).Error("Error authenticating from store")
 								client.sendResponse(r.FailInvalidAuth)
+								s.log().WithError(err).Error("Error authenticating from store")
 							} else if ok {
 								userpass := auth.Auth{
 									Username: user,
@@ -534,9 +534,10 @@ func (s *server) handleClient(client *client) {
 								client.Envelope.Auth = userpass
 								client.sendResponse(r.SuccessAuthCmd)
 							}
+						} else {
+							client.sendResponse(r.SuccessAuthCmd)
 						}
 					}
-					client.sendResponse(r.SuccessAuthCmd)
 				} else {
 					client.sendResponse(r.FailInvalidAuth)
 				}
