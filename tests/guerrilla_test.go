@@ -18,13 +18,13 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/sendx/go-guerrilla/mail/rfc5321"
+	"github.com/karngyan/go-guerrilla/mail/rfc5321"
 
 	"time"
 
-	"github.com/sendx/go-guerrilla"
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
 
 	"bufio"
 
@@ -37,7 +37,7 @@ import (
 
 	"os"
 
-	"github.com/sendx/go-guerrilla/tests/testcert"
+	"github.com/karngyan/go-guerrilla/tests/testcert"
 )
 
 type TestConfig struct {

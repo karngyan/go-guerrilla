@@ -3,8 +3,8 @@ package backends
 import (
 	"fmt"
 
-	"github.com/sendx/go-guerrilla/mail"
-	"github.com/sendx/go-guerrilla/response"
+	"github.com/karngyan/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/response"
 )
 
 // ----------------------------------------------------------------------------------

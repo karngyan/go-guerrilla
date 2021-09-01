@@ -14,10 +14,10 @@ import (
 	"io/ioutil"
 	"net"
 
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
-	"github.com/sendx/go-guerrilla/mail"
-	"github.com/sendx/go-guerrilla/mocks"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mocks"
 )
 
 // getMockServerConfig gets a mock ServerConfig struct used for creating a new server

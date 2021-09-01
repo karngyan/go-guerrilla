@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
-	"github.com/sendx/go-guerrilla/tests/testcert"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/tests/testcert"
 )
 
 // a configuration file with a dummy backend

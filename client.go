@@ -11,10 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sendx/go-guerrilla/log"
-	"github.com/sendx/go-guerrilla/mail"
-	"github.com/sendx/go-guerrilla/mail/rfc5321"
-	"github.com/sendx/go-guerrilla/response"
+	"github.com/karngyan/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mail/rfc5321"
+	"github.com/karngyan/go-guerrilla/response"
 )
 
 // ClientState indicates which part of the SMTP transaction a given client is in.

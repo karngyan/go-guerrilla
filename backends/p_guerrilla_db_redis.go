@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sendx/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mail"
 )
 
 // ----------------------------------------------------------------------------------

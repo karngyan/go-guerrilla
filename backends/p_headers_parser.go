@@ -1,7 +1,7 @@
 package backends
 
 import (
-	"github.com/sendx/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mail"
 )
 
 // ----------------------------------------------------------------------------------

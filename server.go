@@ -17,12 +17,12 @@ import (
 
 	b64 "encoding/base64"
 
-	"github.com/sendx/go-guerrilla/auth"
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
-	"github.com/sendx/go-guerrilla/mail"
-	"github.com/sendx/go-guerrilla/mail/rfc5321"
-	"github.com/sendx/go-guerrilla/response"
+	"github.com/karngyan/go-guerrilla/auth"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mail/rfc5321"
+	"github.com/karngyan/go-guerrilla/response"
 	"github.com/sirupsen/logrus"
 )
 

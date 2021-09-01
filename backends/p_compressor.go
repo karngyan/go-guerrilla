@@ -6,7 +6,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/sendx/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mail"
 )
 
 // ----------------------------------------------------------------------------------

@@ -17,11 +17,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sendx/go-guerrilla"
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
-	test "github.com/sendx/go-guerrilla/tests"
-	"github.com/sendx/go-guerrilla/tests/testcert"
+	"github.com/karngyan/go-guerrilla"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
+	test "github.com/karngyan/go-guerrilla/tests"
+	"github.com/karngyan/go-guerrilla/tests/testcert"
 	"github.com/spf13/cobra"
 )
 

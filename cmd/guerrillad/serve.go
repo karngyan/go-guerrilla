@@ -7,15 +7,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/sendx/go-guerrilla"
-	"github.com/sendx/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla"
+	"github.com/karngyan/go-guerrilla/log"
 
 	// enable the Redis redigo driver
-	_ "github.com/sendx/go-guerrilla/backends/storage/redigo"
+	_ "github.com/karngyan/go-guerrilla/backends/storage/redigo"
 
 	// Choose iconv or mail/encoding package which uses golang.org/x/net/html/charset
 	//_ "github.com/flashmob/go-guerrilla/mail/iconv"
-	_ "github.com/sendx/go-guerrilla/mail/encoding"
+	_ "github.com/karngyan/go-guerrilla/mail/encoding"
 
 	"github.com/spf13/cobra"
 

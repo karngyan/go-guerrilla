@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sendx/go-guerrilla/auth"
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/auth"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
 )
 
 // AppConfig is the holder of the configuration of the app

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sendx/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/mail"
 )
 
 // This will use the golang.org/x/net/html/charset encoder

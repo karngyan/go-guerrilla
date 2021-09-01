@@ -9,8 +9,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/sendx/go-guerrilla/log"
-	"github.com/sendx/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/mail"
 )
 
 var (

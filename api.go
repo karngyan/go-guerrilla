@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
 )
 
 // Daemon provides a convenient API when using go-guerrilla as a package in your Go project.

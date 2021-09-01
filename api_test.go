@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sendx/go-guerrilla/backends"
-	"github.com/sendx/go-guerrilla/log"
-	"github.com/sendx/go-guerrilla/mail"
-	"github.com/sendx/go-guerrilla/response"
+	"github.com/karngyan/go-guerrilla/backends"
+	"github.com/karngyan/go-guerrilla/log"
+	"github.com/karngyan/go-guerrilla/mail"
+	"github.com/karngyan/go-guerrilla/response"
 )
 
 // Test Starting smtp without setting up logger / backend
