@@ -389,6 +389,7 @@ func (s *server) handleClient(client *client) {
 	// The last line doesn't need \r\n since string will be printed as a new line.
 	// Also, Last line has no dash -
 	// help := "250 HELP"
+	authDone := false
 
 	if sc.TLS.AlwaysOn {
 		tlsConfig, ok := s.tlsConfigStore.Load().(*tls.Config)
@@ -494,6 +495,7 @@ func (s *server) handleClient(client *client) {
 				}
 				client.sendResponse(r.SuccessMailCmd)
 			case cmdAUTH.match(cmd):
+				authDone = true
 				command := string(input)
 				split := strings.Split(string(command), " ")
 				// This is the format of the Base64 encoding of the AUTH PLAIN command
@@ -542,6 +544,11 @@ func (s *server) handleClient(client *client) {
 					client.sendResponse(r.FailInvalidAuth)
 				}
 			case cmdMAIL.match(cmd):
+				if sc.AuthConfig.Type != auth.NoAuth && !authDone {
+					client.sendResponse(r.FailInvalidAuth)
+					break
+				}
+
 				if client.isInTransaction() {
 					client.sendResponse(r.FailNestedMailCmd)
 					break
