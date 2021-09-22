@@ -31,6 +31,8 @@ const (
 	ClientStartTLS
 	// Server will shutdown, client to shutdown on next command turn
 	ClientShutdown
+	// We have responded to the client's connection on auth plain and are awaiting SMTP Authentication credentials
+	ClientAuthPlainCredentials
 )
 
 type client struct {

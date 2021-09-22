@@ -29,6 +29,7 @@ import (
 const (
 	CommandVerbMaxLength = 16
 	CommandLineMaxLength = 1024
+	CredentialsMaxLength = 2048
 	// Number of allowed unrecognized commands before we terminate the connection
 	MaxUnrecognizedCommands = 5
 )
@@ -495,15 +496,19 @@ func (s *server) handleClient(client *client) {
 				}
 				client.sendResponse(r.SuccessMailCmd)
 			case cmdAUTH.match(cmd):
-				authDone = true
 				command := string(input)
 				split := strings.Split(string(command), " ")
-				// This is the format of the Base64 encoding of the AUTH PLAIN command
-				// If the input is user: agni, password: pass, then the base64 generated would be: "AGFnbmkAcGFzcw=="
-				// When decoded, it will have the following byte array sequence: [0 97 103 110 105 0 112 97 115 115]
-				// As seen, the byte array starts with a "null" character, then the next 4 bytes convert to "agni"
-				// Then, another null character follows, added by the string which converts to "pass"
-				if len(split) >= 3 && split[1] == "PLAIN" {
+				if len(split) < 3 && split[1] == "PLAIN" {
+					// AUTH PLAIN but client hasn't sent the credentials in this line, lets wait for another
+					client.state = ClientAuthPlainCredentials
+					client.sendResponse(r.PositiveIntermediate)
+				} else if len(split) >= 3 && split[1] == "PLAIN" {
+					authDone = true
+					// This is the format of the Base64 encoding of the AUTH PLAIN command
+					// If the input is user: agni, password: pass, then the base64 generated would be: "AGFnbmkAcGFzcw=="
+					// When decoded, it will have the following byte array sequence: [0 97 103 110 105 0 112 97 115 115]
+					// As seen, the byte array starts with a "null" character, then the next 4 bytes convert to "agni"
+					// Then, another null character follows, added by the string which converts to "pass"
 					s.log().Info("Auth command split from client:", split)
 					if up, err := b64.StdEncoding.DecodeString(split[2]); err != nil {
 						s.log().WithError(err).Error("Error decoding username/password")
@@ -627,6 +632,77 @@ func (s *server) handleClient(client *client) {
 					client.sendResponse(r.FailUnrecognizedCmd)
 				}
 			}
+
+		case ClientAuthPlainCredentials:
+			// read smtp auth credentials
+			client.bufin.setLimit(CredentialsMaxLength)
+			input, err := s.readCommand(client) // read till \n or a timeout
+			s.log().Debugf("Client sent: %s", input)
+			if err == io.EOF {
+				s.log().WithError(err).Warnf("Client closed the connection: %s", client.RemoteIP)
+				return
+			} else if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+				s.log().WithError(err).Warnf("Timeout: %s", client.RemoteIP)
+				return
+			} else if err == LineLimitExceeded {
+				client.sendResponse(r.FailLineTooLong)
+				client.kill()
+				break
+			} else if err != nil {
+				s.log().WithError(err).Warnf("Read error: %s", client.RemoteIP)
+				client.kill()
+				break
+			}
+			if s.isShuttingDown() {
+				client.state = ClientShutdown
+				continue
+			}
+
+			authDone = true
+
+			// This is the format of the Base64 encoding of the AUTH PLAIN command
+			// If the input is user: agni, password: pass, then the base64 generated would be: "AGFnbmkAcGFzcw=="
+			// When decoded, it will have the following byte array sequence: [0 97 103 110 105 0 112 97 115 115]
+			// As seen, the byte array starts with a "null" character, then the next 4 bytes convert to "agni"
+			// Then, another null character follows, added by the string which converts to "pass"
+			if up, err := b64.StdEncoding.DecodeString(string(input)); err != nil {
+				s.log().WithError(err).Error("Error decoding username/password")
+				client.sendResponse(r.FailInvalidAuth)
+				break
+			} else {
+				var user string
+				var pass string
+				nilFound := 0
+				// This code segments the byte array into username and password from the example shown above.
+				for _, b := range up {
+					if b == 0 {
+						nilFound++
+						continue
+					} else if nilFound == 1 {
+						user += string(b)
+					} else if nilFound == 2 {
+						pass += string(b)
+					}
+				}
+				if sc.AuthConfig.Type != auth.NoAuth {
+					if ok, err := sc.AuthConfig.Store.Authenticate(user, pass); err != nil {
+						client.sendResponse(r.FailInvalidAuth)
+						s.log().WithError(err).Error("Error authenticating from store")
+					} else if ok {
+						userpass := auth.Auth{
+							Username: user,
+							Password: pass,
+						}
+						client.Envelope.Auth = userpass
+						client.sendResponse(r.SuccessAuthCmd)
+					}
+				} else {
+					client.sendResponse(r.SuccessAuthCmd)
+				}
+			}
+
+			// reset client state
+			client.state = ClientCmd
 
 		case ClientData:
 

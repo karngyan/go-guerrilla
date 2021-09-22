@@ -159,6 +159,9 @@ type Responses struct {
 	SuccessDataCmd       *Response
 	SuccessStartTLSCmd   *Response
 	SuccessMessageQueued *Response
+
+	// The 300's
+	PositiveIntermediate *Response
 }
 
 // Called automatically during package load to build up the Responses struct
@@ -205,6 +208,11 @@ func init() {
 		BasicCode:    235,
 		Class:        ClassSuccess,
 		Comment:      "Login successful for user",
+	}
+
+	Canned.PositiveIntermediate = &Response{
+		BasicCode: 334,
+		Comment:   "334 ", // expects a space after 334 rfc4954
 	}
 
 	Canned.SuccessNoopCmd = &Response{
